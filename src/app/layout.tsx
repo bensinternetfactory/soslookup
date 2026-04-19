@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { BottomNav } from "@/components/bottom-nav";
 import { siteConfig } from "@/lib/site";
 import "./globals.css";
 
@@ -14,16 +15,13 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
-  title: {
-    default: siteConfig.title,
-    template: `%s · ${siteConfig.name}`,
-  },
+  title: { default: siteConfig.title, template: `%s · ${siteConfig.name}` },
   description: siteConfig.description,
   keywords: siteConfig.keywords,
   authors: [{ name: siteConfig.author }],
   creator: siteConfig.author,
   applicationName: siteConfig.name,
-  category: "reference",
+  category: "government",
   openGraph: {
     type: "website",
     locale: siteConfig.locale,
@@ -37,20 +35,14 @@ export const metadata: Metadata = {
     title: siteConfig.title,
     description: siteConfig.description,
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: { index: true, follow: true },
-  },
-  alternates: {
-    canonical: siteConfig.url,
-  },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
+  alternates: { canonical: siteConfig.url },
 };
 
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#1a1a2e" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f1a24" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -58,11 +50,7 @@ export const viewport: Viewport = {
   colorScheme: "light dark",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
       <body className="min-h-dvh flex flex-col">
@@ -78,6 +66,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <BottomNav />
         </ThemeProvider>
       </body>
     </html>
