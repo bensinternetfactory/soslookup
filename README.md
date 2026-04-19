@@ -1,84 +1,74 @@
-# SOSLookup
+# Dover Watch
 
-A fast, mobile-first directory that links out to every US Secretary of State
-(or equivalent agency) business entity search — all 50 states plus DC.
+An independent civic-transparency site for Dover, New Hampshire. Every
+meeting, every representative, every bid, every budget line — with citations
+back to the primary source.
 
-Live: https://soslookup.com
+## Current phase
+
+**Frontend shell with realistic mock data.** All pages render, navigation
+works, layouts are mobile-first. Real data scrapers, Mapbox integration, and
+email subscriptions will wire in next.
 
 ## Stack
 
-- **Next.js 15** (App Router, React 19, fully statically generated)
-- **TypeScript 5.7** strict mode
-- **Tailwind CSS v4** with OKLCH color tokens and native dark mode
+- **Next.js 15** (App Router, React 19, statically rendered)
+- **TypeScript 5.7** strict
+- **Tailwind CSS v4** with OKLCH tokens and dark-mode support
 - **next-themes** for system-aware light/dark
 - **lucide-react** icons
-- No database, no API routes — every state page is pre-rendered HTML
+- No database yet — mock data lives in `src/lib/data.ts`
 
-## Local development
+## Local dev
 
 ```bash
 npm install
 npm run dev      # http://localhost:3000
-npm run build    # production build
+npm run build
 npm run typecheck
-npm run lint
 ```
 
-## Project layout
+## Layout
 
 ```
 src/
 ├── app/
-│   ├── layout.tsx              Root layout, metadata, theme provider
-│   ├── page.tsx                Homepage with hero + search/filter grid
-│   ├── [state]/page.tsx        Per-state detail page (generateStaticParams)
-│   ├── about/page.tsx
-│   ├── not-found.tsx
-│   ├── globals.css             Tailwind v4 theme tokens
-│   ├── sitemap.ts              /sitemap.xml
-│   ├── robots.ts               /robots.txt
-│   ├── manifest.ts             /manifest.webmanifest (PWA)
-│   ├── icon.tsx                Dynamic favicon
-│   └── opengraph-image.tsx     Dynamic OG social card
+│   ├── layout.tsx              Root layout, header, bottom nav, theme
+│   ├── page.tsx                Home: next meeting, open bids, map teaser
+│   ├── meetings/               Meeting calendar + individual agendas
+│   ├── representatives/        Directory + per-rep profile
+│   ├── bids/                   Bids board + individual bid page
+│   ├── vendors/                Vendor leaderboard + individual profile
+│   ├── wards/                  Ward directory + per-ward page
+│   ├── budget/                 Budget breakdown + tax rate history
+│   ├── map/                    Interactive map (placeholder)
+│   ├── about/                  Methodology & corrections
+│   ├── sitemap.ts, robots.ts, manifest.ts, icon.tsx
+│   └── globals.css
 ├── components/
-│   ├── header.tsx, footer.tsx, container.tsx
-│   ├── state-card.tsx          Grid card for one state
-│   ├── state-search.tsx        Client-side instant filter
-│   ├── theme-provider.tsx      next-themes wrapper
-│   └── theme-toggle.tsx
+│   ├── header.tsx, footer.tsx, bottom-nav.tsx, container.tsx
+│   ├── theme-*.tsx
+│   ├── status-pill.tsx, section-header.tsx
+│   ├── meeting-card.tsx, rep-card.tsx, bid-card.tsx, vendor-card.tsx
+│   ├── address-lookup.tsx      Mock ward resolver
+│   └── dover-map.tsx           SVG ward map (Mapbox drop-in next)
 └── lib/
-    ├── site.ts                 Site-wide metadata constants
-    └── states.ts               Canonical state data (edit here)
+    ├── site.ts                 Site metadata
+    ├── types.ts                Domain types
+    └── data.ts                 Mock Dover data
 ```
 
-**All 51 state URLs live in one file: `src/lib/states.ts`.** If an agency
-migrates its business-search system, update that file and every page, card,
-sitemap entry, and metadata string updates automatically.
+## Next wiring steps
 
-## Deploying to Vercel (first-time setup)
-
-1. Open [vercel.com/new](https://vercel.com/new) on any device.
-2. Sign in with GitHub, authorize access to `bensinternetfactory/soslookup`.
-3. Import the repo. Vercel auto-detects Next.js — no configuration needed.
-4. Click **Deploy**.
-
-After the first import, Vercel builds a **preview URL for every branch push**
-and updates the production URL on every push to `main`. That's it.
-
-### Custom domain
-
-In the Vercel project → Settings → Domains → add `soslookup.com`. Vercel issues
-the cert automatically via Let's Encrypt.
-
-## Accessibility & performance notes
-
-- Skip-to-content link, semantic landmarks, `aria-live` on filter count.
-- Focus-visible ring on every interactive element.
-- All color pairs meet WCAG AA contrast in both light and dark themes.
-- `prefers-reduced-motion` disables transitions and smooth scroll.
-- 100% static rendering — no JS required to browse; the search input
-  progressively enhances with client-side filtering.
-- 2 kB per route, ~105 kB shared JS (gzipped, Next 15 default chunks).
+1. **Scrape dover.nh.gov** — scheduled GitHub Action, commits normalized
+   JSON back to the repo; site rebuilds via Vercel hook.
+2. **Mapbox GL JS** — replace the SVG ward map, add live bid pins and
+   permit-hearing 500ft abutter circles. GeoJSON served from `/public/geo/`.
+3. **Full-text search** — index all meeting minutes + bid packets via
+   [Pagefind](https://pagefind.app/), 100% static.
+4. **Subscribe / alerts** — Supabase table + Resend for email delivery.
+5. **AI summaries** (optional) — Claude Haiku summarizes agenda packets into
+   two-sentence plain-English blurbs, cached after first run.
 
 ## License
 

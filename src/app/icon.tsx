@@ -9,7 +9,7 @@ export default function Icon() {
       <div
         style={{
           fontSize: 20,
-          background: "#3b5bdb",
+          background: "#1e4a6b",
           color: "white",
           width: "100%",
           height: "100%",
@@ -21,7 +21,7 @@ export default function Icon() {
           borderRadius: 6,
         }}
       >
-        S
+        D
       </div>
     ),
     { ...size },
