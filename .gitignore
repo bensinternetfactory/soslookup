@@ -7,7 +7,7 @@ dist
 .vercel
 .DS_Store
 *.log
-.tsbuildinfo
+*.tsbuildinfo
 next-env.d.ts
 .turbo
 coverage
